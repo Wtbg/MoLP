@@ -1,3 +1,4 @@
+import numpy as np
 import torch
 from tqdm import tqdm
 from sklearn.metrics import accuracy_score

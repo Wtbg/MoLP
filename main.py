@@ -1,6 +1,7 @@
 """
 主训练脚本 - 包含完整的训练验证循环、检查点保存和指标记录
 """
+import pdb
 import torch
 from torch.utils.data import DataLoader, random_split
 from utils.config import load_config
@@ -12,6 +13,7 @@ from training.evaluator import Evaluator
 from training.checkpoint import save_best_model
 
 def main():
+    # pdb.set_trace()
     # ------------------ 初始化阶段 ------------------ 
     # 加载配置
     config = load_config("configs/default.yaml")
@@ -23,17 +25,13 @@ def main():
     logger.info("Preparing datasets...")
     # 加载完整数据集
     full_dataset = AnswerDataset(
-        emb_dir=config.paths.train_emb_dir,
-        label_dir=config.paths.train_label_dir
+        emb_dir=config.paths.data_dir,
+        label_dir=config.paths.label_dir
     )
     
-    # 划分训练集和验证集
-    val_size = int(config.data.val_ratio * len(full_dataset))
-    train_size = len(full_dataset) - val_size
-    train_dataset, val_dataset = random_split(
-        full_dataset, [train_size, val_size],
-        generator=torch.Generator().manual_seed(config.seed)
-    )
+    # 使用完整数据集作为训练集和验证集
+    train_dataset = full_dataset
+    val_dataset = full_dataset
     
     # 创建数据加载器
     train_loader = DataLoader(
@@ -41,14 +39,14 @@ def main():
         batch_size=config.train.batch_size,
         shuffle=True,
         num_workers=config.data.num_workers,
-        pin_memory=True
+        pin_memory=False
     )
     val_loader = DataLoader(
         val_dataset,
         batch_size=config.train.batch_size,
         shuffle=False,
         num_workers=config.data.num_workers,
-        pin_memory=True
+        pin_memory=False
     )
     
     # ------------------ 模型初始化 ------------------

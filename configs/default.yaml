@@ -1,14 +1,14 @@
 # 模型配置
 model:
-  embedding_dim: 1024  # Qwen1.5的嵌入维度
+  embedding_dim: 1536  # Qwen1.5的嵌入维度
   hidden_dims: [512, 256]
-  num_collections: 5    # 答案集合数量
+  num_collections: 6    # 答案集合数量
 
 # 训练配置
 train:
   batch_size: 32
-  learning_rate: 1e-3
-  epochs: 10
+  learning_rate: 5e-4
+  epochs: 256
   save_interval: 2
   eval_interval: 1   # 每多少epoch验证一次
   metric_name: "loss" # 监控指标名称 (loss/accuracy)
@@ -16,9 +16,10 @@ train:
 
 # 路径配置
 paths:
-  data_dir: "./data/processed"
+  data_dir: "./data/processed/embeddings"
   log_dir: "./training/logs"
   checkpoint_dir: "./training/checkpoint"
+  label_dir: "./data/processed/labels"
 
 data:
   val_ratio: 0.2    # 验证集比例
