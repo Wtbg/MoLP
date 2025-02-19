@@ -16,7 +16,7 @@ class Trainer:
         self.logger = logger
         
         # 初始化训练组件
-        self.optimizer = Adam(model.parameters(), lr=float(config.train.learning_rate))
+        self.optimizer = Adam(model.parameters(), lr=float(config.train.learning_rate), weight_decay=1e-4)
         self.criterion = torch.nn.BCEWithLogitsLoss()
         
     def train_epoch(self, epoch):

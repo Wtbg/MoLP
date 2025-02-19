@@ -56,11 +56,8 @@ def answer_on_set(merge_results, inference_results, id_set):
                     model_answers.append(float(pred))
                 except:
                     model_answers.append(0.0)
-            # 加权平均得到最终答案，使用inference_label作为权重
-            # pdb.set_trace()
-            dot_product = [a * b for a, b in zip(inference_label, model_answers)]
-            moe_pred = sum(dot_product) / sum(inference_label)
-            entry["moe_pred"] = moe_pred
+            # 选择置信权重最大的模型的答案作为最终答案
+            moe_pred = model_answers[inference_label.index(max(inference_label))]
             moe_pred_map[entry["id"]] = moe_pred
             gt_map[entry["id"]] = float(entry["answer"])
             type_info_map[entry["id"]] = entry["type_info"]
