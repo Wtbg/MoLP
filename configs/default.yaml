@@ -7,8 +7,8 @@ model:
 
 # 训练配置
 train:
-  batch_size: 32
-  learning_rate: 5e-4
+  batch_size: 8
+  learning_rate: 1e-4
   weight_decay: 1e-5
   epochs: 1024
   save_interval: 2
@@ -20,10 +20,17 @@ train:
 paths:
   data_dir: "./data/processed/embeddings"
   log_dir: "./training/logs"
-  checkpoint_dir: "./training/checkpoint"
+  checkpoint_dir: "./training/checkpoint_fewer"
   label_dir: "./data/processed/labels"
+  trainset_file: 'training/split/train_set.txt'
+  valset_file: 'training/split/val_set.txt'
+  train_data_dir: './data/train/processed/embeddings'
+  val_data_dir: './data/val/processed/embeddings'
+  train_label_dir: './data/train/processed/labels'
+  val_label_dir: './data/val/processed/labels'
 
 data:
   val_ratio: 0.2    # 验证集比例
+  train_ratio: 0.5  # 训练集比例
   num_workers: 4     # 数据加载线程数
   seed: 42           # 随机种子

@@ -23,8 +23,10 @@ class Config:
         # 确保所有路径存在
         paths = self.config.paths.__dict__
         for name, path in paths.items():
-            Path(path).mkdir(parents=True, exist_ok=True)
-    
+            path_obj = Path(path)
+            if not path_obj.suffix:  # 检查是否是文件
+                path_obj.mkdir(parents=True, exist_ok=True)
+        
     def __getattr__(self, name):
         return getattr(self.config, name)
 

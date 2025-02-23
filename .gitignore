@@ -1,7 +1,10 @@
 data/processed/*
+data/train/*
+data/val/*
 raw_data/*
 backgroundata/*
 *.pyc
 training/checkpoint/*
+training/checkpoint_fewer/*
 *.log
 events.out.tfevents.*

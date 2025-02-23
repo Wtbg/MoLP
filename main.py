@@ -24,14 +24,20 @@ def main():
     # ------------------ 数据准备 ------------------
     logger.info("Preparing datasets...")
     # 加载完整数据集
-    full_dataset = AnswerDataset(
-        emb_dir=config.paths.data_dir,
-        label_dir=config.paths.label_dir
-    )
+    # full_dataset = AnswerDataset(
+    #     emb_dir=config.paths.data_dir,
+    #     label_dir=config.paths.label_dir
+    # )
     
     # 使用完整数据集作为训练集和验证集
-    train_dataset = full_dataset
-    val_dataset = full_dataset
+    train_dataset = AnswerDataset(
+        emb_dir=config.paths.train_data_dir,
+        label_dir=config.paths.train_label_dir
+    )
+    val_dataset = AnswerDataset(
+        emb_dir=config.paths.val_data_dir,
+        label_dir=config.paths.val_label_dir
+    )
     
     # 创建数据加载器
     train_loader = DataLoader(

@@ -38,11 +38,10 @@ def answer_on_set(merge_results, inference_results, id_set):
                 "D": 0
             }
             inference_label = label_map[entry["id"]]
+            model_answers = []
             for id, (model, pred) in enumerate(entry["models"].items()):
-                # pdb.set_trace()
-                vote_value = inference_label[id]
-                answer_vote_map[pred] += vote_value
-            moe_pred = max(answer_vote_map, key=answer_vote_map.get)
+                model_answers.append(pred)
+            moe_pred = model_answers[inference_label.index(max(inference_label))]
             entry["moe_pred"] = moe_pred
             moe_pred_map[entry["id"]] = moe_pred
             gt_map[entry["id"]] = entry["answer"]
@@ -130,7 +129,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--merge_results", type=str, default="backgroundata/modelresults/merged.json")
     parser.add_argument("--inference_results", type=str, default="inference/results.json")
-    parser.add_argument("--id_set", type=str, default="training/split/full_set.txt")
+    parser.add_argument("--id_set", type=str, default="training/split/val_set.txt")
     args = parser.parse_args()
     id_set_file = args.id_set
     id_set = load_id_set(id_set_file)
