@@ -1,6 +1,8 @@
 data/processed/*
 data/train/*
 data/val/*
+data/ratio_0.5/*
+data/ratio_0.8/*
 raw_data/*
 backgroundata/*
 *.pyc
@@ -8,3 +10,10 @@ training/checkpoint/*
 training/checkpoint_fewer/*
 *.log
 events.out.tfevents.*
+data/v4/*
+training/split/*
+training/logs/*
+*.pt
+*.json
+*.txt
+Qwen2.5-1.5B-Instruct/*

@@ -1,7 +1,11 @@
 import argparse
 import json
 import pdb
-from utils.scripts.generate_label import calculate_mra_single, calculate_mra_array
+from utils.scripts.generate_label import calculate_mra_single, calculate_mra_array, mean_relative_accuracy
+
+def cal_mra_cly(pred, target):
+    mra = mean_relative_accuracy(pred, target, .5, .95, .05)
+    return mra
 
 def load_merge_results(result_files):
     with open(result_files, "r") as f:
@@ -37,11 +41,18 @@ def answer_on_set(merge_results, inference_results, id_set):
                 "C": 0,
                 "D": 0
             }
+            topk = 2
             inference_label = label_map[entry["id"]]
             model_answers = []
             for id, (model, pred) in enumerate(entry["models"].items()):
                 model_answers.append(pred)
-            moe_pred = model_answers[inference_label.index(max(inference_label))]
+            topk_idx = sorted(range(len(inference_label)), key=lambda x: inference_label[x], reverse=True)[:topk]
+            for idx in topk_idx:
+                answer_vote_map[model_answers[idx]] += inference_label[idx]
+            moe_pred = max(answer_vote_map, key=answer_vote_map.get)
+            # pdb.set_trace()
+            if args.if_evaluate_benchmark == True:
+                moe_pred = dict(entry["models"]).get(args.evaluate_benchmark_name)
             entry["moe_pred"] = moe_pred
             moe_pred_map[entry["id"]] = moe_pred
             gt_map[entry["id"]] = entry["answer"]
@@ -57,6 +68,16 @@ def answer_on_set(merge_results, inference_results, id_set):
                     model_answers.append(0.0)
             # 选择置信权重最大的模型的答案作为最终答案
             moe_pred = model_answers[inference_label.index(max(inference_label))]
+            # pdb.set_trace()
+            if args.if_evaluate_benchmark == True:
+                moe_pred = dict(entry["models"]).get(args.evaluate_benchmark_name)
+                try:
+                    moe_pred = float(moe_pred)
+                except:
+                    if(moe_pred == "TWO"):
+                        moe_pred = 2.0
+                    else:
+                        moe_pred = 0.0
             moe_pred_map[entry["id"]] = moe_pred
             gt_map[entry["id"]] = float(entry["answer"])
             type_info_map[entry["id"]] = entry["type_info"]
@@ -81,14 +102,16 @@ def answer_on_set(merge_results, inference_results, id_set):
             assert id in type_info_map
             if type_info_map[id] == 0:
                 type0_cnt += 1
-                type0_mra_sum += calculate_mra_single(moe_pred_map[id], gt_map[id])
+                # type0_mra_sum += calculate_mra_single(moe_pred_map[id], gt_map[id])
+                type0_mra_sum += cal_mra_cly(moe_pred_map[id], gt_map[id])
             elif type_info_map[id] == 1:
                 type1_cnt += 1
                 if moe_pred_map[id] == gt_map[id]:
                     type1_correct_cnt += 1
             elif type_info_map[id] == 2:
                 type2_cnt += 1
-                type2_mra_sum += calculate_mra_single(moe_pred_map[id], gt_map[id])
+                # type2_mra_sum += calculate_mra_single(moe_pred_map[id], gt_map[id])
+                type2_mra_sum += cal_mra_cly(moe_pred_map[id], gt_map[id])  
             elif type_info_map[id] == 3:
                 type3_cnt += 1
                 if moe_pred_map[id] == gt_map[id]:
@@ -127,9 +150,11 @@ def answer_on_set(merge_results, inference_results, id_set):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--merge_results", type=str, default="backgroundata/modelresults/merged.json")
-    parser.add_argument("--inference_results", type=str, default="inference/results.json")
-    parser.add_argument("--id_set", type=str, default="training/split/val_set.txt")
+    parser.add_argument("--merge_results", type=str, default="backgroundata/modelresults/merged_v4.json")
+    parser.add_argument("--inference_results", type=str, default="inference/results_v4.json")
+    parser.add_argument("--id_set", type=str, default="training/split/v4/val_set_0.8.txt")
+    parser.add_argument("--evaluate_benchmark_name", type=str, default=None)
+    parser.add_argument("--if_evaluate_benchmark", type=bool, default=False)
     args = parser.parse_args()
     id_set_file = args.id_set
     id_set = load_id_set(id_set_file)
@@ -137,6 +162,13 @@ if __name__ == "__main__":
     inference_results = load_inference_results(args.inference_results)
     result = answer_on_set(merge_results, inference_results, id_set)
     print(result)
-    with open("evaluate/evaluate_results.json", "w") as f:
-        json.dump(result, f)
+    if args.if_evaluate_benchmark == True:
+        result_file = f"evaluate/evaluate_results_{args.evaluate_benchmark_name}.json"
+        with open(result_file, "w") as f:
+            json.dump(result, f)
+    else:
+        with open("evaluate/evaluate_results.json", "w") as f:
+            json.dump(result, f)
+        with open("evaluate/v4/ratio_0.8/evaluate_results.json", "w") as f:
+            json.dump(result, f)
     

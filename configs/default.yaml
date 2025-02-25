@@ -10,7 +10,7 @@ train:
   batch_size: 8
   learning_rate: 1e-4
   weight_decay: 1e-5
-  epochs: 1024
+  epochs: 128
   save_interval: 2
   eval_interval: 1   # 每多少epoch验证一次
   metric_name: "loss" # 监控指标名称 (loss/accuracy)
@@ -20,17 +20,14 @@ train:
 paths:
   data_dir: "./data/processed/embeddings"
   log_dir: "./training/logs"
-  checkpoint_dir: "./training/checkpoint_fewer"
+  checkpoint_dir: "training/checkpoint_fewer_v4/best_model_0.8_0224.pth"
   label_dir: "./data/processed/labels"
-  trainset_file: 'training/split/train_set.txt'
-  valset_file: 'training/split/val_set.txt'
-  train_data_dir: './data/train/processed/embeddings'
-  val_data_dir: './data/val/processed/embeddings'
-  train_label_dir: './data/train/processed/labels'
-  val_label_dir: './data/val/processed/labels'
+  train_data_dir: 'data/v4/ratio_0.8/train/embedding'
+  val_data_dir: 'data/v4/ratio_0.8/val/embedding'
+  train_label_dir: 'data/v4/ratio_0.8/train/label'
+  val_label_dir: 'data/v4/ratio_0.8/val/label'
 
 data:
-  val_ratio: 0.2    # 验证集比例
-  train_ratio: 0.5  # 训练集比例
+  train_ratio: 0.8  # 训练集比例
   num_workers: 4     # 数据加载线程数
   seed: 42           # 随机种子

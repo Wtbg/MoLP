@@ -32,11 +32,11 @@ class Evaluator:
         
         # 计算指标
         avg_loss = total_loss / len(self.val_loader)
+        
         acc = accuracy_score(
             (np.array(all_labels) > 0.5).astype(int),
             (np.array(all_preds) > 0.5).astype(int)
         )
-        
         # 记录日志
         self.logger.info(f"Validation Loss: {avg_loss:.4f} | Accuracy: {acc:.4f}")
         return {'loss': avg_loss, 'accuracy': acc}

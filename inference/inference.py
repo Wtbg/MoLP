@@ -44,10 +44,10 @@ def main():
     checkpoint_path = Path(config.paths.checkpoint_dir) / "best_model.pt"
     model = load_model(checkpoint_path, config, device)
     
-    questions = load_questions("raw_data/questions/questions.json")
+    questions = load_questions("raw_data/questions/questions_v4.json")
     
-    tokenizer = tokenizer = AutoTokenizer.from_pretrained("/sda/kongming/3d-cake/script/MoE/Qwen/Qwen2.5-1.5B-Instruct")
-    llm_model = AutoModel.from_pretrained("/sda/kongming/3d-cake/script/MoE/Qwen/Qwen2.5-1.5B-Instruct").to(device)
+    tokenizer = tokenizer = AutoTokenizer.from_pretrained("Qwen2.5-1.5B-Instruct")
+    llm_model = AutoModel.from_pretrained("Qwen2.5-1.5B-Instruct").to(device)
     llm_model.eval()
     
     results = []
@@ -61,7 +61,7 @@ def main():
         results.append(result_item)
     
     # 保存结果
-    with open("inference/results.json", "w") as f:
+    with open("inference/results_v4.json", "w") as f:
         json.dump(results, f)
 
 if __name__ == "__main__":

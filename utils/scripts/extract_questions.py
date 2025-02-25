@@ -18,6 +18,6 @@ def extract_questions(input_file, output_file):
         json.dump(questions, f, indent=4)
 
 if __name__ == "__main__":
-    input_file = 'backgroundata/modelresults/2d-clean-llavanextvideo7b-sabench-v2.1.json'
-    output_file = 'raw_data/questions/questions.json'
+    input_file = 'backgroundata/modelresults/v4/2d-clean-llavanextvideo7b-sabench-v4.1.json'
+    output_file = 'raw_data/questions/questions_v4.json'
     extract_questions(input_file, output_file)

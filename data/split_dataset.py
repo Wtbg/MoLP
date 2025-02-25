@@ -35,21 +35,38 @@ def split_dataset(full_dataset, train_ratio):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--full_dataset_path", type=str, default="backgroundata/modelresults/merged.json")
-    parser.add_argument("--output_dir", type=str, default="training/split")
+    config = load_config("configs/default.yaml")
+    parser.add_argument("--full_dataset_path", type=str, default="backgroundata/modelresults/merged_v4.json")
+    parser.add_argument("--output_dir", type=str, default="training/split/v4")
     args = parser.parse_args()
     with open(args.full_dataset_path, "r") as f:
         data = json.load(f)
-    train_set, val_set = split_dataset(data, 0.5)
+    train_ratio = float(config.data.train_ratio)
+    print(f"Splitting dataset with train ratio {train_ratio}.")
+    train_set, val_set = split_dataset(data, train_ratio)
     output_dir = Path(args.output_dir)
     
-    with open(output_dir / "train_set.txt", "w") as f:
-        for id in train_set:
-            f.write(f"data/processed/embeddings/{str(id).zfill(8)}.pt\n")
+    train_filename = output_dir / f"train_set_{train_ratio}.txt"
+    val_filename = output_dir / f"val_set_{train_ratio}.txt"
 
-    with open(output_dir / "val_set.txt", "w") as f:
+    with open(train_filename, "w") as f:
+        for id in train_set:
+            f.write(f"data/v4/processed/embeddings/{str(id).zfill(8)}.pt\n")
+
+    with open(val_filename, "w") as f:
         for id in val_set:
-            f.write(f"data/processed/embeddings/{str(id).zfill(8)}.pt\n")
+            f.write(f"data/v4/processed/embeddings/{str(id).zfill(8)}.pt\n")
+            
+    train_label_filename = output_dir / f"train_set_label_{train_ratio}.txt"
+    val_label_filename = output_dir / f"val_set_label_{train_ratio}.txt"
+    
+    with open(train_label_filename, "w") as f:
+        for id in train_set:
+            f.write(f"data/v4/processed/labels/{str(id).zfill(8)}.pt\n")
+    
+    with open(val_label_filename, "w") as f:
+        for id in val_set:
+            f.write(f"data/v4/processed/labels/{str(id).zfill(8)}.pt\n")
     
     print("Split dataset successfully.")
 

@@ -11,6 +11,8 @@ from models import ConfidenceMLP
 from training.trainer import Trainer
 from training.evaluator import Evaluator
 from training.checkpoint import save_best_model
+import os
+from datetime import datetime
 
 def main():
     # pdb.set_trace()
@@ -90,17 +92,22 @@ def main():
         # 验证阶段
         if epoch % config.train.eval_interval == 0:
             val_metrics = evaluator.evaluate(epoch)
-            
+            # pdb.set_trace()
             # 保存最佳模型
             current_metric = val_metrics[config.train.metric_name]
             if (config.train.metric_mode == 'min' and current_metric < best_metric) or \
                (config.train.metric_mode == 'max' and current_metric > best_metric):
                 best_metric = current_metric
+                # 组合路径
+                timestamp = datetime.now().strftime("%m%d")
+                train_ratio = config.data.train_ratio
+                save_path = os.path.join(config.paths.checkpoint_dir, f"best_model_{train_ratio}_{timestamp}.pth")
+
                 save_best_model(
                     model=model,
                     epoch=epoch,
                     metric=best_metric,
-                    save_path=config.paths.checkpoint_dir
+                    save_path=save_path
                 )
                 logger.info(f"New best {config.train.metric_name} achieved: {best_metric:.4f}")
         

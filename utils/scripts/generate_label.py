@@ -89,6 +89,20 @@ def calculate_loose_mra_single(y_true, y_pred):
     mra /= len(C)
     return mra
 
+def abs_dist_norm(pred, target):
+    return abs(pred - target) / target
+
+def mean_relative_accuracy(pred, target, start, end, interval):
+    # 计算预测值和目标值之间的相对准确率
+    # 计算预测值和目标值之间的绝对距离
+    num_pts = (end - start) / interval + 2
+    # 计算预测值和目标值之间的置信区间
+    conf_intervs = np.linspace(start, end, int(num_pts))
+    # 计算预测值和目标值之间的相对准确率
+    accuracy = abs_dist_norm(pred, target) <= 1 - conf_intervs
+    # 返回预测值和目标值之间的相对准确率的平均值
+    return accuracy.mean()
+
 def generate_label(result_file, label_dir):
     label_dir = Path(label_dir)
     label_dir.mkdir(parents=True, exist_ok=True)
@@ -129,8 +143,8 @@ def generate_label(result_file, label_dir):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--result_file", type=str, default="backgroundata/modelresults/merged.json")
-    parser.add_argument("--label_dir", type=str, default="data/processed/labels")
+    parser.add_argument("--result_file", type=str, default="backgroundata/modelresults/merged_v4.json")
+    parser.add_argument("--label_dir", type=str, default="data/v4/processed/labels")
     args = parser.parse_args()
     generate_label(args.result_file, args.label_dir)
     print(f"Labels saved to {args.label_dir}")

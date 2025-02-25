@@ -6,7 +6,7 @@ from transformers import AutoTokenizer, AutoModel
 from pathlib import Path
 import argparse
 
-def generate_embeddings(texts, model_name="/sda/kongming/3d-cake/script/MoE/Qwen/Qwen2.5-1.5B-Instruct"):
+def generate_embeddings(texts, model_name="Qwen2.5-1.5B-Instruct"):
     """生成文本嵌入并保存"""
     device = "cuda" if torch.cuda.is_available() else "cpu"
     
@@ -16,7 +16,7 @@ def generate_embeddings(texts, model_name="/sda/kongming/3d-cake/script/MoE/Qwen
     model.eval()
     
     # 创建输出目录
-    emb_dir = Path("data/processed/embeddings")
+    emb_dir = Path("data/v4/processed/embeddings")
     emb_dir.mkdir(parents=True, exist_ok=True)
     
     # 批量处理文本
@@ -29,7 +29,7 @@ def generate_embeddings(texts, model_name="/sda/kongming/3d-cake/script/MoE/Qwen
             outputs = model(**inputs)
             # 使用平均池化获取文本嵌入
             embedding = outputs.last_hidden_state.mean(dim=1).squeeze().cpu()
-            torch.save(embedding, emb_dir/f"{idx}.pt")
+            torch.save(embedding, emb_dir/f"{str(idx).zfill(8)}.pt")
             
 def load_labels(labels):
     """保存标签数据"""
@@ -41,8 +41,7 @@ def load_labels(labels):
         
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--input_dir", type=str, default="raw_data/questions/questions.json")
-    # parser.add_argument("--output_dir", type=str, required=True)
+    parser.add_argument("--input_dir", type=str, default="raw_data/questions/questions_v4.json")
     args = parser.parse_args()
     questions = args.input_dir
     quesions_units = []

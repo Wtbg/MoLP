@@ -1,4 +1,5 @@
 from pathlib import Path
+import pdb
 import torch
 import logging
 
@@ -9,6 +10,7 @@ def check_embeddings(embedding_dir):
     emb_files = sorted(list(emb_dir.glob("*.pt")))
     for emb_file in emb_files:
         emb = torch.load(emb_file)
+        # pdb.set_trace()
         assert emb.dim() == 1, f"维度错误: {emb_file}"
         assert emb.size(0) == 1536, f"维度错误: {emb_file}"
         
@@ -26,5 +28,5 @@ def check_labels(label_dir):
             logging.error(err)
         
 if __name__ == "__main__":
-    check_embeddings("data/processed/embeddings")
-    check_labels("data/processed/labels")
+    check_embeddings("data/v4/processed/embeddings")
+    check_labels("data/v4/processed/labels")
