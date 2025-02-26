@@ -20,7 +20,7 @@ train:
 paths:
   data_dir: "./data/processed/embeddings"
   log_dir: "./training/logs"
-  checkpoint_dir: "training/checkpoint_fewer_v4/best_model_0.8_0224.pth"
+  checkpoint_dir: "./training/checkpoints"
   label_dir: "./data/processed/labels"
   train_data_dir: 'data/v4/ratio_0.8/train/embedding'
   val_data_dir: 'data/v4/ratio_0.8/val/embedding'

@@ -1,0 +1,17 @@
+python data/split_file_unconf.py --input_data_file_list_train training/split/v4/ratio_0.9/train_set_0.9.txt --input_label_file_list_train training/split/v4/ratio_0.9/train_set_label_0.9.txt --input_data_file_list_val training/split/v4/ratio_0.9/val_set_0.9.txt --input_label_file_list_val training/split/v4/ratio_0.9/val_set_label_0.9.txt --output_dir data/split/v4/ratio_0.9
+
+python data/split_file_unconf.py --input_data_file_list_train training/split/v4/ratio_0.8/train_set_0.8.txt --input_label_file_list_train training/split/v4/ratio_0.8/train_set_label_0.8.txt --input_data_file_list_val training/split/v4/ratio_0.8/val_set_0.8.txt --input_label_file_list_val training/split/v4/ratio_0.8/val_set_label_0.8.txt --output_dir data/split/v4/ratio_0.8
+
+python data/split_file_unconf.py --input_data_file_list_train training/split/v4/ratio_0.7/train_set_0.7.txt --input_label_file_list_train training/split/v4/ratio_0.7/train_set_label_0.7.txt --input_data_file_list_val training/split/v4/ratio_0.7/val_set_0.7.txt --input_label_file_list_val training/split/v4/ratio_0.7/val_set_label_0.7.txt --output_dir data/split/v4/ratio_0.7
+
+python data/split_file_unconf.py --input_data_file_list_train training/split/v4/ratio_0.6/train_set_0.6.txt --input_label_file_list_train training/split/v4/ratio_0.6/train_set_label_0.6.txt --input_data_file_list_val training/split/v4/ratio_0.6/val_set_0.6.txt --input_label_file_list_val training/split/v4/ratio_0.6/val_set_label_0.6.txt --output_dir data/split/v4/ratio_0.6
+
+python data/split_file_unconf.py --input_data_file_list_train training/split/v4/ratio_0.5/train_set_0.5.txt --input_label_file_list_train training/split/v4/ratio_0.5/train_set_label_0.5.txt --input_data_file_list_val training/split/v4/ratio_0.5/val_set_0.5.txt --input_label_file_list_val training/split/v4/ratio_0.5/val_set_label_0.5.txt --output_dir data/split/v4/ratio_0.5
+
+python data/split_file_unconf.py --input_data_file_list_train training/split/v4/ratio_0.4/train_set_0.4.txt --input_label_file_list_train training/split/v4/ratio_0.4/train_set_label_0.4.txt --input_data_file_list_val training/split/v4/ratio_0.4/val_set_0.4.txt --input_label_file_list_val training/split/v4/ratio_0.4/val_set_label_0.4.txt --output_dir data/split/v4/ratio_0.4
+
+python data/split_file_unconf.py --input_data_file_list_train training/split/v4/ratio_0.3/train_set_0.3.txt --input_label_file_list_train training/split/v4/ratio_0.3/train_set_label_0.3.txt --input_data_file_list_val training/split/v4/ratio_0.3/val_set_0.3.txt --input_label_file_list_val training/split/v4/ratio_0.3/val_set_label_0.3.txt --output_dir data/split/v4/ratio_0.3
+
+python data/split_file_unconf.py --input_data_file_list_train training/split/v4/ratio_0.2/train_set_0.2.txt --input_label_file_list_train training/split/v4/ratio_0.2/train_set_label_0.2.txt --input_data_file_list_val training/split/v4/ratio_0.2/val_set_0.2.txt --input_label_file_list_val training/split/v4/ratio_0.2/val_set_label_0.2.txt --output_dir data/split/v4/ratio_0.2
+
+python data/split_file_unconf.py --input_data_file_list_train training/split/v4/ratio_0.1/train_set_0.1.txt --input_label_file_list_train training/split/v4/ratio_0.1/train_set_label_0.1.txt --input_data_file_list_val training/split/v4/ratio_0.1/val_set_0.1.txt --input_label_file_list_val training/split/v4/ratio_0.1/val_set_label_0.1.txt --output_dir data/split/v4/ratio_0.1

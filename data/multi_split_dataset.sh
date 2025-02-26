@@ -1,0 +1,9 @@
+python data/split_dataset_unconf.py --output_dir training/split/v4/ratio_0.9 --train_ratio 0.9
+python data/split_dataset_unconf.py --output_dir training/split/v4/ratio_0.8 --train_ratio 0.8
+python data/split_dataset_unconf.py --output_dir training/split/v4/ratio_0.7 --train_ratio 0.7
+python data/split_dataset_unconf.py --output_dir training/split/v4/ratio_0.6 --train_ratio 0.6
+python data/split_dataset_unconf.py --output_dir training/split/v4/ratio_0.5 --train_ratio 0.5
+python data/split_dataset_unconf.py --output_dir training/split/v4/ratio_0.4 --train_ratio 0.4
+python data/split_dataset_unconf.py --output_dir training/split/v4/ratio_0.3 --train_ratio 0.3
+python data/split_dataset_unconf.py --output_dir training/split/v4/ratio_0.2 --train_ratio 0.2
+python data/split_dataset_unconf.py --output_dir training/split/v4/ratio_0.1 --train_ratio 0.1
