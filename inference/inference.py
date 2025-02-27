@@ -1,3 +1,4 @@
+import argparse
 import pdb
 import torch
 import json
@@ -35,8 +36,9 @@ def load_questions(questions_path):
         questions = json.load(f)
     return questions
 
-def main():
+def main(args):
     config = load_config("configs/default.yaml")
+    config.paths.checkpoint_dir = args.checkpoint_path
     logger = setup_logger(config.paths.log_dir)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     logger.info(f"Using device: {device}")
@@ -61,8 +63,12 @@ def main():
         results.append(result_item)
     
     # 保存结果
-    with open("inference/results_v4.json", "w") as f:
+    with open(args.results_path, "w") as f:
         json.dump(results, f)
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--checkpoint_path", type=str, default="training/checkpoints/v4")
+    parser.add_argument("--results_path", type=str, default="inference/results_v4.json")
+    args = parser.parse_args()
+    main(args)

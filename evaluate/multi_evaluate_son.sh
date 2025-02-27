@@ -3,8 +3,9 @@ model_list=(llavanextvideo7b longva7b chat-scene leo video_3d_llm llava-3d)
 train_ratio=$1
 id_set_arg="training/split/v4/ratio_${train_ratio}/val_set_${train_ratio}.txt"
 output_dir_arg="evaluate/v4/ratio_${train_ratio}"
+inference_results=inference/v4/ratio_$train_ratio/results_v4.json
 echo "Evaluate MoE! Train ratio: $train_ratio"
-python evaluate/evaluate_unconf.py --id_set $id_set_arg --output_dir $output_dir_arg 
+python evaluate/evaluate_unconf.py --id_set $id_set_arg --output_dir $output_dir_arg --inference_results $inference_results
 echo "Evaluate Each Model! Train ratio: $train_ratio"
 for model in "${model_list[@]}"
 do

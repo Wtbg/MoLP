@@ -152,7 +152,7 @@ def answer_on_set(merge_results, inference_results, id_set):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--merge_results", type=str, default="backgroundata/modelresults/merged_v4.json")
-    parser.add_argument("--inference_results", type=str, default="inference/results_v4.json")
+    parser.add_argument("--inference_results", type=str, default=None)
     parser.add_argument("--id_set", type=str, default=None)
     parser.add_argument("--output_dir", type=str, default=None)
     parser.add_argument("--evaluate_benchmark_name", type=str, default=None)
