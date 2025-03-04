@@ -27,7 +27,7 @@ def load_id_set(id_set_file):
     id_set = [int(id) for id in id_set]
     return id_set
 
-def answer_on_set(merge_results, inference_results, id_set):
+def answer_on_set(merge_results, inference_results, id_set, topk):
     label_map = {}
     for entry in inference_results:
         label_map[entry["id"]] = entry["label"]
@@ -35,6 +35,12 @@ def answer_on_set(merge_results, inference_results, id_set):
     gt_map = {}
     type_info_map = {}
     for entry in merge_results:
+        # # pdb.set_trace()
+        # select_model_results = {}
+        # select_model_results['llavanextvideo7b'] = (entry["models"])['llavanextvideo7b']
+        # select_model_results['video_3d_llm'] = (entry["models"])['video_3d_llm']
+        # select_model_results['leo'] = (entry["models"])['leo']
+        # entry["models"] = select_model_results
         if entry['type_info'] not in [0, 2]:
             answer_vote_map = {
                 "A": 0,
@@ -42,8 +48,13 @@ def answer_on_set(merge_results, inference_results, id_set):
                 "C": 0,
                 "D": 0
             }
-            topk = 2
+            topk = min(topk, len(entry["models"]))
             inference_label = label_map[entry["id"]]
+            # select_inference_label = []
+            # select_inference_label.append(inference_label[1])
+            # select_inference_label.append(inference_label[3])
+            # select_inference_label.append(inference_label[5])
+            # inference_label = select_inference_label
             model_answers = []
             for id, (model, pred) in enumerate(entry["models"].items()):
                 model_answers.append(pred)
@@ -61,14 +72,27 @@ def answer_on_set(merge_results, inference_results, id_set):
         else:
             model_answers = []
             inference_label = label_map[entry["id"]]
+            # select_inference_label = []
+            # select_inference_label.append(inference_label[1])
+            # select_inference_label.append(inference_label[3])
+            # select_inference_label.append(inference_label[5])
+            # inference_label = select_inference_label
             for id, (model, pred) in enumerate(entry["models"].items()):
                 # catch float() exception
                 try:
                     model_answers.append(float(pred))
                 except:
                     model_answers.append(0.0)
-            # 选择置信权重最大的模型的答案作为最终答案
-            moe_pred = model_answers[inference_label.index(max(inference_label))]
+            # 选择置信权重加权平均作为最终答案
+            # pdb.set_trace()
+            topk_idx = sorted(range(len(inference_label)), key=lambda x: inference_label[x], reverse=True)[:topk]
+            # 从topk的模型中中加权平均结果
+            moe_pred = 0.0
+            weight_sum = 0.0
+            for idx in topk_idx:
+                moe_pred += model_answers[idx] * inference_label[idx]
+                weight_sum += inference_label[idx]
+            moe_pred /= weight_sum
             # pdb.set_trace()
             if args.if_evaluate_benchmark == True:
                 moe_pred = dict(entry["models"]).get(args.evaluate_benchmark_name)
@@ -131,6 +155,7 @@ def answer_on_set(merge_results, inference_results, id_set):
     type3_accuracy = type3_correct_cnt / type3_cnt
     type4_accuracy = type4_correct_cnt / type4_cnt
     type5_accuracy = type5_correct_cnt / type5_cnt
+    print(f"type0_cnt: {type0_cnt}, type2_cnt: {type2_cnt}, type1_cnt: {type1_cnt}, type3_cnt: {type3_cnt}, type4_cnt: {type4_cnt}, type5_cnt: {type5_cnt}")
     # 根据type_info_map和label_map统计各个type_info对每个模型答案的置信度的均值和方差
     type_info_average = {}
     type_info_variance = {}
@@ -157,12 +182,14 @@ if __name__ == "__main__":
     parser.add_argument("--output_dir", type=str, default=None)
     parser.add_argument("--evaluate_benchmark_name", type=str, default=None)
     parser.add_argument("--if_evaluate_benchmark", type=bool, default=False)
+    parser.add_argument("--topk", type=int, default=1)
     args = parser.parse_args()
+    print("args:", args)
     id_set_file = args.id_set
     id_set = load_id_set(id_set_file)
     merge_results = load_merge_results(args.merge_results)
     inference_results = load_inference_results(args.inference_results)
-    result = answer_on_set(merge_results, inference_results, id_set)
+    result = answer_on_set(merge_results, inference_results, id_set, args.topk)
     print(result)
     Path(args.output_dir).mkdir(parents=True, exist_ok=True)
     if args.if_evaluate_benchmark == True:
@@ -173,4 +200,3 @@ if __name__ == "__main__":
         result_file = f"{args.output_dir}/evaluate_results.json"
         with open(result_file, "w") as f:
             json.dump(result, f)
-    
